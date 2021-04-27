@@ -5,6 +5,7 @@ import Footer from './Footer';
 import Main from './Main';
 import ROUTES_MAP from '../utils/routesMap';
 import CURRENCY from '../utils/consts-currencies';
+import Converter from './Converter';
 
 function App() {
   const [currentCurrency, setCurrentCurrency] = React.useState(CURRENCY.RUB);
@@ -14,6 +15,7 @@ function App() {
       <Route exact path={ROUTES_MAP.CONVERTER}>
         <div className="page">
           <Header />
+          <Converter />
           <Footer />
         </div>
       </Route>

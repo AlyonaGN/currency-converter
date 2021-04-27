@@ -22,5 +22,15 @@ module.exports = {
     'import/no-unresolved': 'off',
     'react/prop-types': 0,
     'arrow-body-style': ['error', 'always'],
+    'jsx-a11y/label-has-associated-control': ['error', {
+      required: {
+        some: ['nesting', 'id'],
+      },
+    }],
+    'jsx-a11y/label-has-for': ['error', {
+      required: {
+        some: ['nesting', 'id'],
+      },
+    }],
   },
 };
