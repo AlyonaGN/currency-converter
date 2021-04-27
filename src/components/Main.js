@@ -1,10 +1,14 @@
 import React from 'react';
-// import Form from './Form.js';
+import CurrencyOptions from './CurrencyOptions';
+import ConversionPrices from './ConversionPrices';
 
-const Main = () => (
-  <div className="page__main">
-    main
-  </div>
-);
+const Main = ({ currency }) => {
+  return (
+    <div className="page__main">
+      <CurrencyOptions />
+      <ConversionPrices currentCurrency={currency} />
+    </div>
+  );
+};
 
 export default Main;
