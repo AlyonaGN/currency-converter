@@ -5,15 +5,11 @@ import PAGE_TITLES from '../utils/consts-titles';
 import getKeyProp from '../utils/getKeyProp';
 import ROUTES_MAP from '../utils/routesMap';
 
-const ConversionPrices = ({ currentCurrency }) => {
-  const [conversionCurrencies, setConversionCurrencies] = React.useState([]);
-
+const ConversionPrices = ({ currentCurrency, conversionCurrencies, quotes }) => {
   React.useEffect(() => {
-    setConversionCurrencies(Object.values(CURRENCY).filter((cur) => {
-      console.log(cur, currentCurrency);
-      return cur !== currentCurrency;
-    }));
-  }, [currentCurrency]);
+    console.log(currentCurrency, conversionCurrencies, quotes);
+  }, [currentCurrency, conversionCurrencies, quotes]);
+
   return (
     <div className="content-container">
       {
@@ -24,7 +20,9 @@ const ConversionPrices = ({ currentCurrency }) => {
               {' '}
               {CURRENCY[currentCurrency]}
               {' '}
-              = 75.09
+              =
+              {' '}
+              {quotes[conversCur]}
               {' '}
               {CURRENCY[conversCur]}
             </span>

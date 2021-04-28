@@ -3,7 +3,7 @@ import CURRENCY from '../utils/consts-currencies';
 import getKeyProp from '../utils/getKeyProp';
 import CurrencyButton from './CurrencyButton';
 
-const CurrencyOptions = ({ currentCurrency }) => {
+const CurrencyOptions = ({ currentCurrency, makeCurrencyActive }) => {
   const [currencyOptions, setCurrencyOptions] = React.useState([]);
 
   React.useEffect(() => {
@@ -11,7 +11,7 @@ const CurrencyOptions = ({ currentCurrency }) => {
   }, []);
 
   return (
-    <div className="content-container">
+    <div className="content-container" onClick={makeCurrencyActive}>
       {currencyOptions.map((currency, index) => {
         const active = currentCurrency === currency;
         return (
