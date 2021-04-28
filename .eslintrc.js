@@ -32,5 +32,6 @@ module.exports = {
         some: ['nesting', 'id'],
       },
     }],
+    'no-underscore-dangle': 'off',
   },
 };

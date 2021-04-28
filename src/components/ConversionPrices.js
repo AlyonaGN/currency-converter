@@ -10,9 +10,10 @@ const ConversionPrices = ({ currentCurrency }) => {
 
   React.useEffect(() => {
     setConversionCurrencies(Object.values(CURRENCY).filter((cur) => {
+      console.log(cur, currentCurrency);
       return cur !== currentCurrency;
     }));
-  }, []);
+  }, [currentCurrency]);
   return (
     <div className="content-container">
       {
