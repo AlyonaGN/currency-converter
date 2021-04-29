@@ -15,14 +15,15 @@ const App = () => {
   const [quotes, setQuotes] = React.useState({});
 
   const makeCurrencyActive = useCallback(async (e) => {
-    setCurrentCurrency(e.target.innerHTML);
-    saveCurrencyInStorage(e.target.innerHTML);
+    const { currency } = e.target.dataset;
+    setCurrentCurrency(currency);
+    saveCurrencyInStorage(currency);
     const currenciesForConversion = Object.values(CURRENCY).filter((cur) => {
-      return cur !== e.target.innerHTML;
+      return cur !== currency;
     });
     setConversionCurrencies(currenciesForConversion);
     const receivedQuotes = await
-    currencyApi.getCurrency(e.target.innerHTML, currenciesForConversion);
+    currencyApi.getCurrency(currency, currenciesForConversion);
     setQuotes(receivedQuotes);
   }, []);
 
