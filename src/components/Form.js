@@ -32,7 +32,6 @@ const Form = ({
   const handleConverseClick = useCallback((e) => {
     e.preventDefault();
     handleConverse(formValue);
-    setFormValue('');
   });
 
   return (
