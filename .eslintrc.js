@@ -20,7 +20,6 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'import/no-unresolved': 'off',
-    'react/prop-types': 0,
     'arrow-body-style': ['error', 'always'],
     'jsx-a11y/label-has-associated-control': ['error', {
       required: {
@@ -36,5 +35,8 @@ module.exports = {
     'class-methods-use-this': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
+    'no-plusplus': 'off',
+    'react/prop-types': 0,
+    'import/no-named-as-default': 'off',
   },
 };

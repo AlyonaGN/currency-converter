@@ -45,6 +45,10 @@
     background-color: #a4aba4;
 }
 
+.form__submit-button:disabled {
+    background-color: #E0E0E0;
+}
+
 .form__field {
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);

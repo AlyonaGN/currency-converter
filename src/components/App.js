@@ -13,6 +13,11 @@ const App = () => {
   const [currentCurrency, setCurrentCurrency] = React.useState('');
   const [conversionCurrencies, setConversionCurrencies] = React.useState([]);
   const [quotes, setQuotes] = React.useState({});
+  const [baseCurrencyFromInput, setBaseCurrencyFromInput] = React.useState('');
+  const [converseCurrencyFromInput, setConverseCurrencyFromInput] = React.useState('');
+  const [areConversionResultsOpen, setConversionResultsOpen] = React.useState(false);
+  const [baseSumFromInput, setBaseSumFromInput] = React.useState('');
+  const [convertedSum, setConvertedSum] = React.useState('');
 
   const makeCurrencyActive = useCallback(async (e) => {
     const { currency } = e.target.dataset;
@@ -26,6 +31,36 @@ const App = () => {
     currencyApi.getCurrency(currency, currenciesForConversion);
     setQuotes(receivedQuotes);
   }, []);
+
+  const handleConverseClick = useCallback(async (input) => {
+    const indexes = {};
+    /* Для того, чтобы распарсить ввод,
+    который мог содержать незначительные неточности и лишние символы,
+    выясняю какая валюта является исходной, а какая - валютой конвертации через
+    индекс вхождения в строку инпута. Если индекс -1, то он не попадает в объект с индексами,
+    таким образом в объекте окажется два свойства с ключом в виде числа, отражающего индекс
+    начала вхождения в инпут и значением - именем валюты. JS обеспечивает хранение свойств
+    с ключами-числами в порядке возрастания, что можно удобно использовать.
+    Предшествующая валидация должна обеспечить, что в инпуте упоминается именно две валюты. */
+    Object.keys(CURRENCY).forEach((cur) => {
+      const idexOfCurInInput = input.toUpperCase().indexOf(cur);
+      if (idexOfCurInInput !== -1) {
+        indexes[idexOfCurInInput] = cur;
+      }
+    });
+    const orderedIndexes = Object.keys(indexes);
+    const baseCur = indexes[orderedIndexes[0]];
+    const converseCur = indexes[orderedIndexes[1]];
+    setBaseCurrencyFromInput(baseCur);
+    setConverseCurrencyFromInput(converseCur);
+    const baseSum = parseInt(input, 10);
+    setBaseSumFromInput(baseSum);
+    const resQuote = await currencyApi
+      .getCurrency(baseCur, [converseCur]);
+    const resSum = resQuote[converseCur] * baseSum;
+    setConvertedSum(resSum);
+    setConversionResultsOpen(true);
+  });
 
   React.useEffect(async () => {
     const curFromStorage = getCurrencyFromStorage();
@@ -49,27 +84,30 @@ const App = () => {
   }, []);
 
   return (
-    <Switch>
-      <Route exact path={ROUTES_MAP.CONVERTER}>
-        <div className="page">
-          <Header />
-          <Converter />
-          <Footer />
-        </div>
-      </Route>
-      <Route exact path={ROUTES_MAP.MAIN}>
-        <div className="page">
-          <Header />
+    <div className="page">
+      <Header />
+      <Switch>
+        <Route exact path={ROUTES_MAP.CONVERTER}>
+          <Converter
+            onConverse={handleConverseClick}
+            conversionResultsOpen={areConversionResultsOpen}
+            baseSum={baseSumFromInput}
+            baseCur={baseCurrencyFromInput}
+            resSum={convertedSum}
+            resCur={converseCurrencyFromInput}
+          />
+        </Route>
+        <Route exact path={ROUTES_MAP.MAIN}>
           <Main
             currency={currentCurrency}
             conversionCurrs={conversionCurrencies}
             currencyQuotes={quotes}
             makeCurrActive={makeCurrencyActive}
           />
-          <Footer />
-        </div>
-      </Route>
-    </Switch>
+        </Route>
+      </Switch>
+      <Footer />
+    </div>
   );
 };
 

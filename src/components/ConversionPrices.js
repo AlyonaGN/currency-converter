@@ -6,10 +6,6 @@ import getKeyProp from '../utils/getKeyProp';
 import ROUTES_MAP from '../utils/routesMap';
 
 const ConversionPrices = ({ currentCurrency, conversionCurrencies, quotes }) => {
-  React.useEffect(() => {
-    console.log(currentCurrency, conversionCurrencies, quotes);
-  }, [currentCurrency, conversionCurrencies, quotes]);
-
   return (
     <div className="content-container">
       {

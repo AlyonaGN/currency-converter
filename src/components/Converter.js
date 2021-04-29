@@ -1,10 +1,19 @@
 import React from 'react';
 import Form from './Form';
 
-const Converter = () => {
+const Converter = ({
+  onConverse, conversionResultsOpen, baseSum, baseCur, resSum, resCur,
+}) => {
   return (
     <div className="page__main">
-      <Form />
+      <Form
+        handleConverse={onConverse}
+        sum={baseSum}
+        base={baseCur}
+        resultSum={resSum}
+        converseCur={resCur}
+        areResultsShown={conversionResultsOpen}
+      />
     </div>
   );
 };
