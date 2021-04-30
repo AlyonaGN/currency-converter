@@ -1,46 +1,21 @@
 import React, { useCallback } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
 import ROUTES_MAP from '../utils/routesMap';
 import CURRENCY from '../utils/consts-currencies';
 import Converter from './Converter';
-import { getCurrencyFromStorage, saveCurrencyInStorage } from '../utils/localStorageHandler';
 import currencyApi from '../utils/currencyAPI';
+import store from '../store';
 
 const App = () => {
-  const [currentCurrency, setCurrentCurrency] = React.useState('');
-  const [conversionCurrencies, setConversionCurrencies] = React.useState([]);
-  const [quotes, setQuotes] = React.useState({});
   const [baseCurrencyFromInput, setBaseCurrencyFromInput] = React.useState('');
   const [converseCurrencyFromInput, setConverseCurrencyFromInput] = React.useState('');
   const [areConversionResultsOpen, setConversionResultsOpen] = React.useState(false);
   const [baseSumFromInput, setBaseSumFromInput] = React.useState('');
   const [convertedSum, setConvertedSum] = React.useState('');
-
-  const defineCurrsForConversion = useCallback((base) => {
-    return Object.values(CURRENCY).filter((cur) => {
-      return cur !== base;
-    });
-  });
-  const prepareQuotesPageForOpening = useCallback(async (activeCur) => {
-    setCurrentCurrency(activeCur);
-    const currenciesForConversion = defineCurrsForConversion(activeCur);
-    setConversionCurrencies(currenciesForConversion);
-    const receivedQuotes = await currencyApi.getCurrency(activeCur, currenciesForConversion);
-    setQuotes(receivedQuotes);
-  }, []);
-  const makeCurrencyActive = useCallback(async (e) => {
-    const { currency } = e.target.dataset;
-    setCurrentCurrency(currency);
-    saveCurrencyInStorage(currency);
-    const currenciesForConversion = defineCurrsForConversion(currency);
-    setConversionCurrencies(currenciesForConversion);
-    const quotesFromApi = await
-    currencyApi.getCurrency(currency, currenciesForConversion);
-    setQuotes(quotesFromApi);
-  });
 
   /* Для того, чтобы распарсить ввод,
     который мог содержать незначительные неточности и лишние символы,
@@ -85,40 +60,28 @@ const App = () => {
     setConversionResultsOpen(true);
   });
 
-  React.useEffect(async () => {
-    const curFromStorage = getCurrencyFromStorage();
-    if (curFromStorage) {
-      prepareQuotesPageForOpening(curFromStorage);
-    } else {
-      prepareQuotesPageForOpening(CURRENCY.RUB);
-    }
-  }, []);
-
   return (
-    <div className="page">
-      <Header />
-      <Switch>
-        <Route exact path={ROUTES_MAP.CONVERTER}>
-          <Converter
-            onConverse={handleConverseClick}
-            conversionResultsOpen={areConversionResultsOpen}
-            baseSum={baseSumFromInput}
-            baseCur={baseCurrencyFromInput}
-            resSum={convertedSum}
-            resCur={converseCurrencyFromInput}
-          />
-        </Route>
-        <Route exact path={ROUTES_MAP.MAIN}>
-          <Main
-            currency={currentCurrency}
-            conversionCurrs={conversionCurrencies}
-            currencyQuotes={quotes}
-            makeCurrActive={makeCurrencyActive}
-          />
-        </Route>
-      </Switch>
-      <Footer />
-    </div>
+    <Provider store={store}>
+      <div className="page">
+        <Header />
+        <Switch>
+          <Route exact path={ROUTES_MAP.CONVERTER}>
+            <Converter
+              onConverse={handleConverseClick}
+              conversionResultsOpen={areConversionResultsOpen}
+              baseSum={baseSumFromInput}
+              baseCur={baseCurrencyFromInput}
+              resSum={convertedSum}
+              resCur={converseCurrencyFromInput}
+            />
+          </Route>
+          <Route exact path={ROUTES_MAP.MAIN}>
+            <Main />
+          </Route>
+        </Switch>
+        <Footer />
+      </div>
+    </Provider>
   );
 };
 

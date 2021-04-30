@@ -38,5 +38,6 @@ module.exports = {
     'no-plusplus': 'off',
     'react/prop-types': 0,
     'import/no-named-as-default': 'off',
+    'no-unused-expressions': 'off',
   },
 };

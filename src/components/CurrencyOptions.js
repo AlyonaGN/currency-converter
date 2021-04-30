@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import CURRENCY from '../utils/consts-currencies';
 import getKeyProp from '../utils/getKeyProp';
 import CurrencyButton from './CurrencyButton';
+import { saveCurrencyInStorage } from '../utils/localStorageHandler';
 
-const CurrencyOptions = ({ currentCurrency, makeCurrencyActive }) => {
-  const [currencyOptions, setCurrencyOptions] = React.useState([]);
-
-  React.useEffect(() => {
-    setCurrencyOptions(Object.keys(CURRENCY));
-  }, []);
-
+const CurrencyOptions = ({ handleInitiation }) => {
+  const quotesState = useSelector((st) => {
+    return st.quotes;
+  });
+  const makeCurrencyActive = useCallback(async (e) => {
+    const { currency } = e.target.dataset;
+    handleInitiation(currency);
+    saveCurrencyInStorage(currency);
+  });
   return (
     <div className="content-container" onClick={makeCurrencyActive}>
-      {currencyOptions.map((currency, index) => {
-        const active = currentCurrency === currency;
+      {Object.keys(CURRENCY).map((currency, index) => {
+        const active = quotesState.currentCur === currency;
         return (
           <CurrencyButton
             key={getKeyProp(index)}
