@@ -5,6 +5,7 @@ const API_CONSTS = {
   а запрос к внешнему api - отправляться с бэка */
   KEY: 'df06ef415c5bb4a13f9ff3fb292bd6ff',
   CONVERSION_PRICE_ENDPOINT: 'live',
+  ERROR: 'Ошибка работы API',
 };
 
 export default API_CONSTS;

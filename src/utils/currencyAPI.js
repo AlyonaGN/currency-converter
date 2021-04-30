@@ -13,6 +13,9 @@ class CurrencyAPI {
       .then(async (res) => {
         const results = await CurrencyAPI._getResponseData(res);
         return CurrencyAPI._formatResponse(results.quotes, conversionCurrencies, baseCurrency);
+      })
+      .catch((err) => {
+        return Promise.reject(new Error(`Ошибка: ${err.message ? err.message : API_CONSTS.ERROR}`));
       });
   }
 
