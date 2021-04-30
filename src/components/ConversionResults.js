@@ -1,17 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const ConversionResults = ({
-  baseSum, baseCur, convertedSum, convCur,
-}) => {
+const ConversionResults = () => {
+  const conversionState = useSelector((st) => {
+    return st.conversion;
+  });
   return (
     <span className="content-container__element content-container__conversion-price">
-      {baseSum}
-      {baseCur}
+      {conversionState.inputSum}
+      {conversionState.inputBase}
       {' '}
       =
       {' '}
-      {convertedSum}
-      {convCur}
+      {conversionState.convertedSum}
+      {conversionState.converseCur}
     </span>
   );
 };

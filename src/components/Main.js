@@ -8,7 +8,6 @@ import currencyApi from '../utils/currencyAPI';
 
 const Main = () => {
   const dispatch = useDispatch();
-
   const initiateQuotesPage = async (activeCur) => {
     dispatch(quotesActions.setCurrentCur(activeCur));
     const currenciesForConversion = defineCurrsForConversion(activeCur);

@@ -20,7 +20,6 @@ const ConversionPrices = ({ handleInitiation }) => {
       handleInitiation(CURRENCY.RUB);
     }
   }, []);
-  console.log(quotesState);
   return (
     <div className="content-container">
       {
