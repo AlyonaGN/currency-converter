@@ -19,31 +19,45 @@ const App = () => {
   const [baseSumFromInput, setBaseSumFromInput] = React.useState('');
   const [convertedSum, setConvertedSum] = React.useState('');
 
+  const defineCurrsForConversion = useCallback((base) => {
+    return Object.values(CURRENCY).filter((cur) => {
+      return cur !== base;
+    });
+  });
+  const prepareQuotesPageForOpening = useCallback(async (activeCur) => {
+    setCurrentCurrency(activeCur);
+    const currenciesForConversion = defineCurrsForConversion(activeCur);
+    setConversionCurrencies(currenciesForConversion);
+    const receivedQuotes = await currencyApi.getCurrency(activeCur, currenciesForConversion);
+    setQuotes(receivedQuotes);
+  }, []);
   const makeCurrencyActive = useCallback(async (e) => {
     const { currency } = e.target.dataset;
     setCurrentCurrency(currency);
     saveCurrencyInStorage(currency);
-    const currenciesForConversion = Object.values(CURRENCY).filter((cur) => {
-      return cur !== currency;
-    });
+    const currenciesForConversion = defineCurrsForConversion(currency);
     setConversionCurrencies(currenciesForConversion);
-    const receivedQuotes = await
+    const quotesFromApi = await
     currencyApi.getCurrency(currency, currenciesForConversion);
-    setQuotes(receivedQuotes);
-  }, []);
+    setQuotes(quotesFromApi);
+  });
 
-  const handleConverseClick = useCallback(async (input) => {
-    const indexes = {};
-    /* Для того, чтобы распарсить ввод,
+  /* Для того, чтобы распарсить ввод,
     который мог содержать незначительные неточности и лишние символы,
     выясняю какая валюта является исходной, а какая - валютой конвертации через
-    индекс вхождения в строку инпута. Если индекс -1, то он не попадает в объект с индексами,
-    таким образом в объекте окажется два свойства с ключом в виде числа, отражающего индекс
-    начала вхождения в инпут и значением - именем валюты. JS обеспечивает хранение свойств
-    с ключами-числами в порядке возрастания, что можно удобно использовать.
-    Предшествующая валидация должна обеспечить, что в инпуте упоминается именно две валюты. */
+    индекс вхождения в строку инпута. Если индекс -1, то он не попадает в объект с индексами
+    (валюта не упомянута в вводе).
+    Таким образом в объекте с индексами окажется два свойства с ключом в виде числа,
+    отражающего индекс начала вхождения в инпут и значением - именем валюты.
+    JS обеспечивает хранение свойств с ключами-числами в порядке возрастания
+    и соблюдение этого порядка при вызове Object.keys(obj), что можно удобно использовать.
+    Предшествующая этому обработчику валидация обеспечивает,
+    что в инпуте упоминается именно две валюты. */
+  const parseInput = useCallback((input) => {
+    const indexes = {};
+    const upperCasedInput = input.toUpperCase();
     Object.keys(CURRENCY).forEach((cur) => {
-      const idexOfCurInInput = input.toUpperCase().indexOf(cur);
+      const idexOfCurInInput = upperCasedInput.indexOf(cur);
       if (idexOfCurInInput !== -1) {
         indexes[idexOfCurInInput] = cur;
       }
@@ -51,13 +65,22 @@ const App = () => {
     const orderedIndexes = Object.keys(indexes);
     const baseCur = indexes[orderedIndexes[0]];
     const converseCur = indexes[orderedIndexes[1]];
+    const baseSum = parseInt(input, 10);
+    return { baseCur, converseCur, baseSum };
+  });
+
+  const convertSum = useCallback((sum, quote) => {
+    return sum * quote;
+  });
+
+  const handleConverseClick = useCallback(async (input) => {
+    const { baseCur, converseCur, baseSum } = parseInput(input);
     setBaseCurrencyFromInput(baseCur);
     setConverseCurrencyFromInput(converseCur);
-    const baseSum = parseInt(input, 10);
     setBaseSumFromInput(baseSum);
     const resQuote = await currencyApi
       .getCurrency(baseCur, [converseCur]);
-    const resSum = resQuote[converseCur] * baseSum;
+    const resSum = convertSum(baseSum, resQuote[converseCur]);
     setConvertedSum(resSum);
     setConversionResultsOpen(true);
   });
@@ -65,21 +88,9 @@ const App = () => {
   React.useEffect(async () => {
     const curFromStorage = getCurrencyFromStorage();
     if (curFromStorage) {
-      setCurrentCurrency(curFromStorage);
-      const currenciesForConversion = Object.values(CURRENCY).filter((cur) => {
-        return cur !== curFromStorage;
-      });
-      setConversionCurrencies(currenciesForConversion);
-      const receivedQuotes = await currencyApi.getCurrency(curFromStorage, currenciesForConversion);
-      setQuotes(receivedQuotes);
+      prepareQuotesPageForOpening(curFromStorage);
     } else {
-      setCurrentCurrency(CURRENCY.RUB);
-      const currenciesForConversion = Object.values(CURRENCY).filter((cur) => {
-        return cur !== CURRENCY.RUB;
-      });
-      setConversionCurrencies(currenciesForConversion);
-      const receivedQuotes = await currencyApi.getCurrency(CURRENCY.RUB, currenciesForConversion);
-      setQuotes(receivedQuotes);
+      prepareQuotesPageForOpening(CURRENCY.RUB);
     }
   }, []);
 
