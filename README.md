@@ -1,22 +1,26 @@
-# Конвертер валют
+## Currency Converter
 
-Приложение, состоящее из двух страниц. Первая страница даёт информацию о текущих курсах валют - RUB, EUR, GBP, USD, вторая позволяет конвертировать суммы в указанные валюты.
+An application consisting of two pages. The first page provides information on the current exchange rates for RUB, EUR, GBP, and USD, while the second page allows you to convert amounts into the specified currencies.
 
-## Запуск проекта
+### Project Setup
 
-Для локального запуска проекта необходимо: скачать репозиторий, зайти в корневую папку репозитория с помощью терминала, установить необходимые модули комнадой `npm install` и запустить проект командой `npm start`. 
-Запуск тестов осуществляется командой `npm test`. 
+To run the project locally, you need to:
+1. Download the repository.
+2. Navigate to the root folder of the repository using the terminal.
+3. Install the necessary modules with the command `npm install`.
+4. Start the project with the command `npm start`.
+5. Tests can be run using the command `npm test`.
 
-## В проекте использованы
+### Technologies Used
 
-1. React (функциональные и классовые компоненты);
-2. Redux для state-менеджмента;
-3. асинхронные запросы (промисы, async/await);
-4. "живая" валидация пользовательского ввода, дающая результат после каждого изменения в поле ввода;
-5. обработчики пользовательского ввода, минимизирующие вероятность получения пользователем ошибки при небольших нарушениях формата ввода. Например, если пользователь забыл предлог 'in', вставил лишний символ или пробел;
-6. отзывчивая верстка;
-7. jest для тестирования функционала парсинга пользовательского ввода;
-8. localStorage для сохранения выбора валюты пользователя при прошлых посещениях страницы с курсами валюты;
-9. eslint-config-airbnb для контроля стиля кода;
-10. конструктор ошибок для базовой обработки ошибок;
-11. React Router для маршрутизации.
+- **React** (functional and class components)
+- **Redux** for state management
+- Asynchronous requests (promises, async/await)
+- "Live" validation of user input, providing results after each change in the input field
+- Input handlers that minimize the likelihood of user errors due to minor formatting issues, such as forgetting the preposition 'in', inserting an extra character, or space
+- Responsive design
+- **Jest** for testing the input parsing functionality
+- **localStorage** to save the user's currency selection from previous visits to the currency rates page
+- **eslint-config-airbnb** to enforce code style
+- Error constructor for basic error handling
+- **React Router** for routing
